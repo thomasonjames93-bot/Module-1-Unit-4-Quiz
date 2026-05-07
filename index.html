@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unit 4 Interactive Quiz – Formal vs Casual English</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f9ff;
+      color: #003366;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .quiz-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border: 3px solid #003f7f;
+      padding: 30px;
+      border-radius: 6px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #003366;
+    }
+
+    .instructions {
+      font-style: italic;
+      margin-bottom: 5px;
+      color: #003366;
+    }
+
+    .instructions-jp {
+      margin-bottom: 30px;
+      color: #003366;
+    }
+
+    .question-box {
+      border: 2px solid #003f7f;
+      padding: 25px;
+      margin-bottom: 25px;
+      border-radius: 5px;
+      background-color: #ffffff;
+    }
+
+    .question-title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #003366;
+    }
+
+    .question-text {
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    .option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 12px;
+      margin: 8px 0;
+      background-color: #ffffff;
+      border: 2px solid #003f7f;
+      border-radius: 4px;
+      color: #003366;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .option:hover {
+      background-color: #eaf3ff;
+    }
+
+    .selected {
+      background-color: #d8ecff;
+    }
+
+    .correct {
+      background-color: #d4f7d4;
+      border-color: #1b8a1b;
+    }
+
+    .incorrect {
+      background-color: #ffd6d6;
+      border-color: #cc0000;
+    }
+
+    .button-row {
+      margin-top: 20px;
+    }
+
+    button {
+      background-color: #ffd400;
+      border: none;
+      padding: 12px 22px;
+      margin-right: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      color: #003366;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ffbf00;
+    }
+
+    .feedback {
+      margin-top: 18px;
+      padding: 15px;
+      border-radius: 5px;
+      display: none;
+      line-height: 1.6;
+    }
+
+    .feedback.correct-feedback {
+      background-color: #e6ffe6;
+      border: 1px solid #1b8a1b;
+      color: #005500;
+    }
+
+    .feedback.incorrect-feedback {
+      background-color: #ffe6e6;
+      border: 1px solid #cc0000;
+      color: #990000;
+    }
+
+    .score-box {
+      margin-top: 30px;
+      padding: 20px;
+      border: 2px solid #003f7f;
+      border-radius: 5px;
+      background-color: #ffffff;
+      display: none;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .input-answer {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #003f7f;
+      border-radius: 4px;
+      font-size: 15px;
+      margin-top: 10px;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 600px) {
+      .quiz-container {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      .question-title {
+        font-size: 16px;
+      }
+
+      button {
+        width: 100%;
+        margin-right: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="quiz-container">
+    <h1>Unit 4 Interactive Quiz – Formal Business English vs Casual English</h1>
+
+    <p class="instructions">
+      Choose the best answer. When you check your answer, read the Japanese explanation.
+    </p>
+    <p class="instructions-jp">
+      正しい答えを選びましょう。答え合わせの後、日本語の説明を読んで確認しましょう。
+    </p>
+
+    <div id="quiz"></div>
+
+    <button onclick="showScore()">Show Score / スコアを見る</button>
+    <button onclick="resetQuiz()">Reset Quiz / もう一度</button>
+
+    <div id="scoreBox" class="score-box"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        title: "1. Choosing a formal phrase / フォーマルな表現を選ぶ",
+        question: "Which phrase is better for a business situation?<br>ビジネスの場面では、どちらの表現がより適切ですか。",
+        options: [
+          "Bye!",
+          "It was nice speaking with you."
+        ],
+        answer: 1,
+        explanation: "「Bye!」だけだと、ビジネスでは少し短すぎてカジュアルに聞こえます。「It was nice speaking with you.」は丁寧で、会話を自然に終える表現です。"
+      },
+      {
+        title: "2. Formal or casual? / フォーマル？カジュアル？",
+        question: "“Catch you later.”<br><br>Is this formal or casual?<br>これはフォーマルですか、カジュアルですか。",
+        options: [
+          "Formal",
+          "Casual"
+        ],
+        answer: 1,
+        explanation: "「Catch you later.」は友達や親しい同僚に使うカジュアルな表現です。クライアントや初対面の人には、少しくだけすぎています。"
+      },
+      {
+        title: "3. Ending a conversation with a client / クライアントとの会話を終える",
+        question: "You are speaking with a client. Which ending is more appropriate?<br>クライアントと話しています。どちらの終わり方がより適切ですか。",
+        options: [
+          "I have another meeting soon, but it was great speaking with you.",
+          "I’m bored now, so I’m going."
+        ],
+        answer: 0,
+        explanation: "Aは「次の予定がある」と自然な理由を伝えたあと、ポジティブな一言を加えています。Bは「退屈です」と言っているので、とても失礼に聞こえます。"
+      },
+      {
+        title: "4. Casual to formal / カジュアルからフォーマルへ",
+        question: "Casual phrase: “See ya.”<br><br>Which formal phrase has a similar meaning?<br>「See ya.」に近い意味のフォーマルな表現はどれですか。",
+        options: [
+          "Have a good day.",
+          "What’s up?",
+          "No worries."
+        ],
+        answer: 0,
+        explanation: "「See ya.」はカジュアルな別れの挨拶です。ビジネスでは「Have a good day.」の方が丁寧で自然です。"
+      },
+      {
+        title: "5. Formal or casual? / フォーマル？カジュアル？",
+        question: "“I look forward to speaking with you again.”<br><br>Is this formal or casual?<br>これはフォーマルですか、カジュアルですか。",
+        options: [
+          "Formal",
+          "Casual"
+        ],
+        answer: 0,
+        explanation: "「I look forward to...」はビジネスでよく使われる丁寧な表現です。今後また話すことを前向きに伝えることができます。"
+      },
+      {
+        title: "6. Giving a polite reason / 丁寧な理由を伝える",
+        question: "Which reason sounds more polite?<br>どちらの理由がより丁寧に聞こえますか。",
+        options: [
+          "I don’t want to take too much of your time.",
+          "I want to stop talking now."
+        ],
+        answer: 0,
+        explanation: "Aは「相手の時間を大切にしている」というニュアンスがあります。Bは直接的すぎて、冷たい印象や失礼な印象を与える可能性があります。"
+      },
+      {
+        title: "7. Improve the sentence / 文をより丁寧にする",
+        question: "Choose the better business version of this sentence:<br><br>“Nice talking to you. Bye.”<br><br>この文をビジネスらしくすると、どちらが良いですか。",
+        options: [
+          "It was nice speaking with you. Have a great day.",
+          "Okay, bye."
+        ],
+        answer: 0,
+        explanation: "「Nice talking to you. Bye.」は悪くありませんが、少しカジュアルです。「It was nice speaking with you. Have a great day.」にすると、より丁寧でビジネスらしい印象になります。"
+      },
+      {
+        title: "8. Talking about the next step / 次の行動を伝える",
+        question: "Which phrase is best for future contact?<br>次の連絡について話す時、どの表現が一番良いですか。",
+        options: [
+          "I’ll follow up with you by email.",
+          "Anyway, bye.",
+          "I’m done now."
+        ],
+        answer: 0,
+        explanation: "Aは「後ほどメールで連絡します」という意味で、次の行動がはっきりしています。ビジネスでは、会話の最後に次のステップを伝えると自然で丁寧です。"
+      },
+      {
+        title: "9. Formal or casual? / フォーマル？カジュアル？",
+        question: "“Take care.”<br><br>Is this usually formal or more casual?<br>これはとてもフォーマルですか、それとも少しカジュアルですか。",
+        options: [
+          "Very formal",
+          "More casual / neutral"
+        ],
+        answer: 1,
+        explanation: "「Take care.」はよく使われる表現ですが、とてもフォーマルというよりは、ややカジュアルまたは中立的な表現です。親しい同僚には自然ですが、クライアントには「Have a good day.」などの方が安全です。"
+      },
+      {
+        title: "10. Complete the business ending / ビジネス会話の終わりを完成させる",
+        question: "Choose the best phrase to complete the conversation.<br>会話を完成させるのに一番良い表現を選びましょう。<br><br>A: I have another meeting soon, but it was great speaking with you.<br>B: Thank you. __________",
+        options: [
+          "See ya!",
+          "I look forward to speaking again.",
+          "Whatever."
+        ],
+        answer: 1,
+        explanation: "Bは丁寧で、今後また話すことを前向きに伝えています。Aはカジュアルすぎます。Cの「Whatever.」は失礼に聞こえるので、ビジネスでは使わない方がいいです。"
+      }
+    ];
+
+    const userAnswers = new Array(quizData.length).fill(null);
+    const checkedAnswers = new Array(quizData.length).fill(false);
+
+    function loadQuiz() {
+      const quizContainer = document.getElementById("quiz");
+      quizContainer.innerHTML = "";
+
+      quizData.forEach((item, index) => {
+        const questionBox = document.createElement("div");
+        questionBox.className = "question-box";
+
+        const title = document.createElement("div");
+        title.className = "question-title";
+        title.innerHTML = item.title;
+
+        const question = document.createElement("div");
+        question.className = "question-text";
+        question.innerHTML = item.question;
+
+        questionBox.appendChild(title);
+        questionBox.appendChild(question);
+
+        item.options.forEach((option, optionIndex) => {
+          const optionButton = document.createElement("button");
+          optionButton.className = "option";
+          optionButton.innerHTML = option;
+          optionButton.onclick = () => selectAnswer(index, optionIndex);
+          optionButton.id = `q${index}-option${optionIndex}`;
+          questionBox.appendChild(optionButton);
+        });
+
+        const buttonRow = document.createElement("div");
+        buttonRow.className = "button-row";
+
+        const checkButton = document.createElement("button");
+        checkButton.innerHTML = "Check Answer / 答え合わせ";
+        checkButton.onclick = () => checkAnswer(index);
+
+        const clearButton = document.createElement("button");
+        clearButton.innerHTML = "Clear / クリア";
+        clearButton.onclick = () => clearAnswer(index);
+
+        buttonRow.appendChild(checkButton);
+        buttonRow.appendChild(clearButton);
+        questionBox.appendChild(buttonRow);
+
+        const feedback = document.createElement("div");
+        feedback.className = "feedback";
+        feedback.id = `feedback-${index}`;
+        questionBox.appendChild(feedback);
+
+        quizContainer.appendChild(questionBox);
+      });
+    }
+
+    function selectAnswer(questionIndex, optionIndex) {
+      if (checkedAnswers[questionIndex]) return;
+
+      userAnswers[questionIndex] = optionIndex;
+
+      quizData[questionIndex].options.forEach((_, i) => {
+        const optionButton = document.getElementById(`q${questionIndex}-option${i}`);
+        optionButton.classList.remove("selected");
+      });
+
+      const selectedButton = document.getElementById(`q${questionIndex}-option${optionIndex}`);
+      selectedButton.classList.add("selected");
+    }
+
+    function checkAnswer(questionIndex) {
+      const selected = userAnswers[questionIndex];
+      const correct = quizData[questionIndex].answer;
+      const feedback = document.getElementById(`feedback-${questionIndex}`);
+
+      if (selected === null) {
+        feedback.style.display = "block";
+        feedback.className = "feedback incorrect-feedback";
+        feedback.innerHTML = "答えを選んでください。";
+        return;
+      }
+
+      checkedAnswers[questionIndex] = true;
+
+      quizData[questionIndex].options.forEach((_, i) => {
+        const optionButton = document.getElementById(`q${questionIndex}-option${i}`);
+        optionButton.classList.remove("selected");
+
+        if (i === correct) {
+          optionButton.classList.add("correct");
+        }
+
+        if (i === selected && selected !== correct) {
+          optionButton.classList.add("incorrect");
+        }
+      });
+
+      if (selected === correct) {
+        feedback.style.display = "block";
+        feedback.className = "feedback correct-feedback";
+        feedback.innerHTML = `
+          <strong>Correct! / 正解です！</strong><br><br>
+          ${quizData[questionIndex].explanation}
+        `;
+      } else {
+        feedback.style.display = "block";
+        feedback.className = "feedback incorrect-feedback";
+        feedback.innerHTML = `
+          <strong>Incorrect / 不正解です</strong><br><br>
+          正しい答えは: <strong>${quizData[questionIndex].options[correct]}</strong><br><br>
+          ${quizData[questionIndex].explanation}
+        `;
+      }
+    }
+
+    function clearAnswer(questionIndex) {
+      userAnswers[questionIndex] = null;
+      checkedAnswers[questionIndex] = false;
+
+      quizData[questionIndex].options.forEach((_, i) => {
+        const optionButton = document.getElementById(`q${questionIndex}-option${i}`);
+        optionButton.classList.remove("selected", "correct", "incorrect");
+      });
+
+      const feedback = document.getElementById(`feedback-${questionIndex}`);
+      feedback.style.display = "none";
+      feedback.innerHTML = "";
+    }
+
+    function showScore() {
+      let score = 0;
+
+      quizData.forEach((item, index) => {
+        if (userAnswers[index] === item.answer) {
+          score++;
+        }
+      });
+
+      const scoreBox = document.getElementById("scoreBox");
+      scoreBox.style.display = "block";
+      scoreBox.innerHTML = `
+        Your score: ${score} / ${quizData.length}<br>
+        スコア：${score} / ${quizData.length}
+      `;
+    }
+
+    function resetQuiz() {
+      for (let i = 0; i < quizData.length; i++) {
+        userAnswers[i] = null;
+        checkedAnswers[i] = false;
+      }
+
+      document.getElementById("scoreBox").style.display = "none";
+      document.getElementById("scoreBox").innerHTML = "";
+
+      loadQuiz();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    loadQuiz();
+  </script>
+</body>
+</html>
