@@ -141,16 +141,7 @@
       display: none;
       font-weight: bold;
       font-size: 18px;
-    }
-
-    .input-answer {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #003f7f;
-      border-radius: 4px;
-      font-size: 15px;
-      margin-top: 10px;
-      box-sizing: border-box;
+      line-height: 1.7;
     }
 
     @media (max-width: 600px) {
@@ -437,12 +428,30 @@
         }
       });
 
+      let message = "";
+      let messageJapanese = "";
+
+      if (score === quizData.length) {
+        message = "Great job! You got every question correct.";
+        messageJapanese = "すばらしいです！全問正解です。";
+      } else if (score >= 7) {
+        message = "Nice try! You got a few questions wrong, but you did well.";
+        messageJapanese = "よくできました！いくつか間違いはありましたが、よく頑張りました。";
+      } else {
+        message = "Good effort. Try again and review the explanations.";
+        messageJapanese = "よく頑張りました。もう一度挑戦して、説明を復習しましょう。";
+      }
+
       const scoreBox = document.getElementById("scoreBox");
       scoreBox.style.display = "block";
       scoreBox.innerHTML = `
         Your score: ${score} / ${quizData.length}<br>
-        スコア：${score} / ${quizData.length}
+        スコア：${score} / ${quizData.length}<br><br>
+        ${message}<br>
+        ${messageJapanese}
       `;
+
+      scoreBox.scrollIntoView({ behavior: "smooth" });
     }
 
     function resetQuiz() {
